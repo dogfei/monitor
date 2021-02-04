@@ -15,43 +15,47 @@ spec:
         component: node-exporter
       spec:
         containers:
-        - image: zqdlove/node-exporter:v0.16.0
-            name: prometheus-node-exporter
-            ports:
-            - name: prom-node-exp
-              containerPort: 9100
-              hostPort: 9100
-            resources:
-              requests:
-                cpu: "0.6"
-                memory: 100M
-              limits:
-                cpu: "0.6"
-                memory: 100M
-            command:
-            - /bin/node_exporter
-            - --path.procfs
-            - /host/proc
-            - --path.sysfs
-            - /host/sys
-            -  --collector.filesystem.ignored-mount-points
-            - ^/(sys|proc|dev|host|etc)($|/)
-            volumeMounts:
-            - name: proc
-              mountPath: /host/proc
-            - name: sys
-              mountPath: /host/sys
-            - name: root
-              mountPath: /rootfs
-        volumes:
-        - name: proc
-          hostPath:
-            path: /proc
-        - name: sys
-          hostPath:
-            path: /sys
-        - name: root
-          hostPath:
-            path: /
-        hostNetwork: true
-        hostPID: true
+        - image: prom/node-exporter
+          name: prometheus-node-exporter
+          ports:
+          - name: node-exporter
+            containerPort: 9100
+            hostPort: 9100
+          resources:
+            requests:
+              cpu: "0.4"
+              memory: 200M
+            limits:
+              cpu: "0.4"
+              memory: 200M
+          command:
+          - /bin/node_exporter
+          - --path.procfs
+          - /host/proc
+          - --path.sysfs
+          - /host/sys
+          -  --collector.filesystem.ignored-mount-points
+          - ^/(sys|proc|dev|host|etc)($|/)
+          volumeMounts:
+          - name: proc
+            mountPath: /host/proc
+          - name: sys
+            mountPath: /host/sys
+          - name: root
+            mountPath: /rootfs
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: root
+        hostPath:
+          path: /
+      hostNetwork: true
+      hostPID: true

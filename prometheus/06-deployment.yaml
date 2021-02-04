@@ -28,11 +28,13 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 80
+            name: http
           args:
           - --storage.tsdb.retention=15d
           - --config.file=/etc/prometheus/prometheus.yaml
-          - --storage.tsdb.path=/data/prometheus-data
-          - --web.enable-lifecycle
+          - --storage.tsdb.path=/data/prometheus-data #指定存储路径
+          - --web.enable-admin-api #控制对admin HTTP API的访问
+          - --web.enable-lifecycle #支持热更新
           resources:
             requests:
               cpu: 2000m
@@ -53,10 +55,20 @@ spec:
             mountPath: /etc/localtime
           - name: file-sd-volume
             mountPath: /etc/prometheus-file-sd
+        initContainers:
+        - name: set-permission
+          image: busybox
+          command:
+            - sh
+            - -c
+            - chown -R "nobody:nobody" /data/prometheus-data
+          volumeMounts:
+          - name: data
+            mountPath: /data/prometheus-data
         volumes:
         - name: data
-          hostPath:
-            path: /data/prometheus-data
+          persistentVolumeClaim:
+            claimName: prometheus-data
         - name: config-volume
           configMap:
             name: prometheus-config
