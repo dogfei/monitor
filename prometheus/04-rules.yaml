@@ -1,0 +1,100 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: prometheus-rules
+  namespace: monitoring
+data:
+  system.yml: |
+    groups:
+    - name: sentry
+      rules:
+      - alert: "Host Alive"
+        expr: (up{job='sentry'}) == 0
+        for: 60s
+        labels:
+          team: ops
+          severity: CRITICAL
+          cloud: yizhuang
+        annotations:
+          summary: "host is down for 60s"
+          description: "host: {{$labels.instance}}"
+      - alert: "Memory Usage"
+        expr: round((1-(node_memory_MemAvailable_bytes{job='sentry'} / (node_memory_MemTotal_bytes{job='sentry'})))* 100) > 85
+        for: 5m
+        labels:
+          team: ops
+          severity: warning
+          cloud: yizhuang
+        annotations:
+          summary: "Memory usage is too high and over 85% for 5min"
+          description: "The current host {{$labels.instance}}' memory usage is {{ $value }}%"
+      - alert: "CPU Usage"
+        expr: round(100 - (avg by (instance)(irate(node_cpu_seconds_total{mode="idle",job='sentry'}[5m]))*100)) > 85
+        for: 5m
+        labels:
+          team: ops
+          severity: warning
+          cloud: yizhuang
+        annotations:
+          summary: "CPU usage is too high and over 85% for 5min"
+          description: "The current host {{$labels.instance}}' CPU usage is {{ $value }}%"
+      - alert: "IOWait Info"
+        expr: round((avg by (instance)(irate(node_cpu_seconds_total{mode="iowait",job='sentry'}[5m])))*100) > 50
+        for: 5m
+        labels:
+          team: ops
+          severity: warning
+          cloud: yizhuang
+        annotations:
+          summary: "iowait is too high and over 50% for 5min"
+          description: "The current host {{$labels.instance}}' iowait is {{ $value }}%"
+      - alert: "DISK Usage"
+        expr: round(100-100*(node_filesystem_avail_bytes{fstype=~"ext4|xfs",job='sentry'} / node_filesystem_size_bytes{fstype=~"ext4|xfs",job='sentry'})) > 85
+        for: 10m
+        labels:
+          team: ops
+          severity: warning
+          cloud: yizhuang
+        annotations:
+          summary: "DISK usage is too high and over 85% for 10min"
+          description: "The current host {{$labels.instance}}' disk partition is {{$labels.mountpoint}}, disk usage is {{ $value }}%"
+      - alert: "Partition capacity"
+        expr: round(node_filesystem_avail_bytes{fstype=~"ext4|xfs",instance!~"onlinenode",mountpoint!~"/boot.*",job='sentry'}/1024/1024/1024) < 5
+        for: 10m
+        labels:
+          team: ops
+          severity: CRITICAL
+          cloud: yizhuang
+        annotations:
+          summary: "The partition size is too small and less than 5G for 10min"
+          description: "The current host {{$labels.instance}}'s {{$labels.mountpoint}} partition capacity is {{ $value }}GB"
+      - alert: "Network Download Rate"
+        expr: round(max(irate(node_network_receive_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|vir.*|lo.*|vnet.*',job='sentry'}[1m]) / 1024 / 1024 * 8)) > 1024
+        for: 10m
+        labels:
+          team: ops
+          severity: warning
+          cloud: yizhuang
+        annotations:
+          summary: "Network Download Rate is too high and over 1GB/s for 10min"
+          description: "The current host {{$labels.instance}}' network download rate is {{ $value }}MB/s"
+      - alert: "Network upload rate"
+        expr: round(max(irate(node_network_transmit_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|vir.*|lo.*|vnet.*',job='sentry'}[1m]) / 1024 / 1024 * 8)) > 1024
+        for: 10m
+        labels:
+          team: ops
+          severity: warning
+          cloud: yizhuang
+        annotations:
+          summary: "Network upload rate is too high and over 1GB/s for 10min"
+          description: "The current host {{$labels.instance}}' network upload rate is {{ $value }}MB/s"
+      - alert: "Number of connections"
+        expr: (node_sockstat_TCP_tw{job='sentry'}) > 20000
+        for: 10m
+        labels:
+          team: ops
+          severity: warning
+          cloud: yizhuang
+        annotations:
+          summary: "Too many connections and over 20000 for 10min"
+          description: "The current host {{$labels.instance}}'s connections is {{ $value }}"
