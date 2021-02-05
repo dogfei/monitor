@@ -4,15 +4,16 @@ metadata:
   name: prometheus-node-exporter
   namespace: monitoring
   labels:
-    app: prometheus
-    component: node-exporter
+    app: node-exporter
 spec:
+  selector:
+    matchLabels:
+      app: node-exporter
   template:
     metadata:
       name: prometheus-node-exporter
       labels:
-        app: prometheus
-        component: node-exporter
+        app: node-exporter
     spec:
       containers:
       - image: prom/node-exporter

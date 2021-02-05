@@ -6,8 +6,7 @@ metadata:
   name: prometheus-node-exporter
   namespace: monitoring
   labels:
-    app: prometheus
-    component: node-exporter
+    app: node-exporter
 spec:
   clusterIP: None
   ports:
@@ -15,6 +14,5 @@ spec:
     port: 9100
     protocol: TCP
   selector:
-    app: prometheus
-    component: node-exporter
+    app: node-exporter
   type: ClusterIP
