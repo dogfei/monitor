@@ -13,71 +13,71 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
   template:
     metadata:
       name: prometheus-server
       labels:
         app: prometheus
-      spec:
-        serviceAccountName: prometheus-sa
-        containers:
-        - name: prometheus
-          image: prom/prometheus
-          imagePullPolicy: IfNotPresent
-          ports:
-          - containerPort: 80
-            name: http
-          args:
-          - --storage.tsdb.retention=15d
-          - --config.file=/etc/prometheus/prometheus.yaml
-          - --storage.tsdb.path=/data/prometheus-data #指定存储路径
-          - --web.enable-admin-api #控制对admin HTTP API的访问
-          - --web.enable-lifecycle #支持热更新
-          resources:
-            requests:
-              cpu: 2000m
-              memory: 4000M
-            limits:
-              cpu: 2000m
-              memory: 4000M
-          securityContext:
-              privileged: true
-          volumeMounts:
-          - name: data
-            mountPath: /data/prometheus-data
-          - name: config-volume
-            mountPath: /etc/prometheus
-          - name: rules-volume
-            mountPath: /etc/prometheus-rules
-          - name: time
-            mountPath: /etc/localtime
-          - name: file-sd-volume
-            mountPath: /etc/prometheus-file-sd
-        initContainers:
-        - name: set-permission
-          image: busybox
-          command:
-            - sh
-            - -c
-            - chown -R "nobody:nobody" /data/prometheus-data
-          volumeMounts:
-          - name: data
-            mountPath: /data/prometheus-data
-        volumes:
+    spec:
+      serviceAccountName: prometheus-sa
+      containers:
+      - name: prometheus
+        image: prom/prometheus
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+        args:
+        - --storage.tsdb.retention=15d
+        - --config.file=/etc/prometheus/prometheus.yaml
+        - --storage.tsdb.path=/data/prometheus-data #指定存储路径
+        - --web.enable-admin-api #控制对admin HTTP API的访问
+        - --web.enable-lifecycle #支持热更新
+        resources:
+          requests:
+            cpu: 2000m
+            memory: 4000M
+          limits:
+            cpu: 2000m
+            memory: 4000M
+        securityContext:
+            privileged: true
+        volumeMounts:
         - name: data
-          persistentVolumeClaim:
-            claimName: prometheus-data
+          mountPath: /data/prometheus-data
         - name: config-volume
-          configMap:
-            name: prometheus-config
+          mountPath: /etc/prometheus
         - name: rules-volume
-          configMap:
-            name: prometheus-rules
+          mountPath: /etc/prometheus-rules
         - name: time
-          hostPath:
-            path: /etc/localtime
+          mountPath: /etc/localtime
         - name: file-sd-volume
-          configMap:
-            name: file-sd-config
+          mountPath: /etc/prometheus-file-sd
+      initContainers:
+      - name: set-permission
+        image: busybox
+        command:
+          - sh
+          - -c
+          - chown -R "nobody:nobody" /data/prometheus-data
+        volumeMounts:
+        - name: data
+          mountPath: /data/prometheus-data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: prometheus-data
+      - name: config-volume
+        configMap:
+          name: prometheus-config
+      - name: rules-volume
+        configMap:
+          name: prometheus-rules
+      - name: time
+        hostPath:
+          path: /etc/localtime
+      - name: file-sd-volume
+        configMap:
+          name: file-sd-config
