@@ -8,6 +8,6 @@
 ```bash
 kubectl apply -f 01-rbac.yaml -n kube-system
 kubectl apply -f 02-api-svc.yaml -n kube-system
-kubectl apply -f 03-svc.yaml -n kube-system
-kubectl apply -f 04-deployment.yaml -n kube-system
+kubectl apply -f 02-svc.yaml -n kube-system
+kubectl apply -f 03-deployment.yaml -n kube-system
 ```
