@@ -33,11 +33,11 @@ spec:
             memory: 2000Mi
         env:
         - name: GF_AUTH_BASIC_ENABLED
-          value: true
+          value: "true"
         - name: GF_AUTH_ANONYMOUS_ENABLED
-          value: false
+          value: "false"
         - name: GF_SECURITY_ADMIN_USER
-          value: admin
+          value: "admin"
         - name: GF_SECURITY_ADMIN_PASSWORD
           value: "123456"
         readinessProbe:
