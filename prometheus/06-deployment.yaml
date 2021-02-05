@@ -27,7 +27,7 @@ spec:
         image: prom/prometheus
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 80
+        - containerPort: 9090
           name: http
         args:
         - --storage.tsdb.retention=15d
