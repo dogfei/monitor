@@ -43,19 +43,19 @@ spec:
           mountPath: /host/sys
         - name: root
           mountPath: /rootfs
-    tolerations:
-    - key: "node-role.kubernetes.io/master"
-      operator: "Exists"
-      effect: "NoSchedule"
-    volumes:
-    - name: proc
-      hostPath:
-        path: /proc
-    - name: sys
-      hostPath:
-        path: /sys
-    - name: root
-      hostPath:
-        path: /
-    hostNetwork: true
-    hostPID: true
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: root
+        hostPath:
+          path: /
+      hostNetwork: true
+      hostPID: true
