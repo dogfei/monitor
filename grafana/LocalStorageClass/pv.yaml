@@ -19,5 +19,5 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - node3
+          - k8s-node01
   persistentVolumeReclaimPolicy: Retain
