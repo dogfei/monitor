@@ -27,7 +27,7 @@ data:
       - action: labelmap
         regex: __meta_kubernetes_node_label_(.+)
       - action: labeldrop
-        regex: '.*kubernetes.*'
+        regex: 'kubernetes_io_arch'
       file_sd_configs:
       - refresh_interval: 1m
         files:
