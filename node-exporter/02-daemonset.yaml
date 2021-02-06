@@ -20,8 +20,8 @@ spec:
         name: prometheus-node-exporter
         ports:
         - name: node-exporter
-          containerPort: 9100
-          hostPort: 9100
+          containerPort: 9101
+          hostPort: 9101
         resources:
           requests:
             cpu: "0.4"
@@ -31,12 +31,13 @@ spec:
             memory: 200M
         command:
         - /bin/node_exporter
+        - --web.listen-address ":9101"
         - --path.procfs
         - /host/proc
         - --path.sysfs
         - /host/sys
         -  --collector.filesystem.ignored-mount-points
-        - ^/(sys|proc|dev|host|etc)($|/)
+        - '"^/(sys|proc|dev|host|etc)($|/)"'
         volumeMounts:
         - name: proc
           mountPath: /host/proc
