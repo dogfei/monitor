@@ -31,7 +31,7 @@ spec:
             memory: 200M
         command:
         - /bin/node_exporter
-        - --web.listen-address ":9101"
+        - --web.listen-address :9101
         - --path.procfs
         - /host/proc
         - --path.sysfs
