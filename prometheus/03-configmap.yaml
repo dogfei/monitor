@@ -6,32 +6,11 @@ metadata:
 data:
   prometheus.yaml: |
     global:
-      # 多久收集一次数据
       scrape_interval: 15s
-      # 每次收集数据的超时时间
       scrape_timeout: 15s
-      # 多久评估一次规则
       evaluation_interval: 15s
-    # 规则文件，可以使用通配符
     rule_files:
       - "/etc/prometheus-rules/*.yml"
-
-    # 远程写入
-    #remote_write:
-    #- url: http://xxxx
-    #  write_relabel_configs:
-    #  - source_labels: [__name__]
-    #    regex: expensive.*
-    #    action: drop
-
-    # 远程读
-    #remote_read:
-    #- url: http://xxxxx
-    #  read_recent: true
-    #- url: http://xxxx
-    #  read_recent: false
-
-    # 收集数据并进行配置
     scrape_configs:
     - job_name: 'prometheus'
       static_configs:
@@ -59,12 +38,10 @@ data:
         regex: 'beta_kubernetes.*|kubernetes_.*'
       - action: labeldrop
         target_label: app
-      # 文件服务发现配置, 用于监控集群外的机器
       file_sd_configs:
       - refresh_interval: 1m
         files:
         - /etc/prometheus-file-sd/system-metrics.json
-    # 容器监控
     - job_name: 'kubernetes-cadvisor'
       scrape_interval: 1m
       scrape_timeout: 20s
