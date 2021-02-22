@@ -64,6 +64,7 @@ data:
       - refresh_interval: 1m
         files:
         - /etc/prometheus-file-sd/system-metrics.json
+    # 容器监控
     - job_name: 'kubernetes-cadvisor'
       scrape_interval: 1m
       scrape_timeout: 20s
