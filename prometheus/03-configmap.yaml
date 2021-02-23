@@ -55,7 +55,7 @@ data:
     - job_name: 'kubernetes-kubelet'
       kubernetes_sd_configs:
       - role: node
-      scheme: https
+      scheme: http
       tls_config:
         ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         insecure_skip_verify: true
