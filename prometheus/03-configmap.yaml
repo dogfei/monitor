@@ -43,8 +43,7 @@ data:
       metrics_path: /metrics/cadvisor
       tls_config:
         ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-      authorization:
-        credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       relabel_configs:
       - action: labelmap
         regex: __meta_kubernetes_node_label_(.+)
