@@ -29,7 +29,7 @@ data:
       - action: labeldrop
         regex: 'beta_kubernetes.*|kubernetes_.*'
       - action: labeldrop
-        target_label: app
+        regex: app
       file_sd_configs:
       - refresh_interval: 1m
         files:
