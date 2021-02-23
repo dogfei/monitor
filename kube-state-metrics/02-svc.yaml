@@ -1,15 +1,21 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: metrics-server
-  namespace: kube-system
+  name: kube-state-metrics
+  namespace: monitoring
   labels:
-    kubernetes.io/name: "Metrics-server"
-    kubernetes.io/cluster-service: "true"
+    k8s-app: kube-state-metrics
+  annotations:
+    prometheus.io/scrape: 'true'
 spec:
-  selector:
-    k8s-app: metrics-server
   ports:
-  - port: 443
+  - name: http-metrics
+    port: 8080
+    targetPort: http-metrics
     protocol: TCP
-    targetPort: 443
+  - name: telemetry
+    port: 8081
+    targetPort: telemetry
+    protocol: TCP
+  selector:
+    k8s-app: kube-state-metrics

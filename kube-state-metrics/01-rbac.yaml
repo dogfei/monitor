@@ -1,93 +1,95 @@
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: metrics-server
-  namespace: kube-system
+  name: kube-state-metrics
+  namespace: monitoring
 ---
-apiVersion: apiregistration.k8s.io/v1beta1
-kind: APIService
-metadata:
-  name: v1beta1.metrics.k8s.io
-spec:
-  service:
-    name: metrics-server
-    namespace: kube-system
-  group: metrics.k8s.io
-  version: v1beta1
-  insecureSkipTLSVerify: true
-  groupPriorityMinimum: 100
-  versionPriority: 100
 
----
-kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
+# kubernetes versions before 1.8.0 should use rbac.authorization.k8s.io/v1beta1
+kind: Role
 metadata:
-  name: system:aggregated-metrics-reader
-  labels:
-    rbac.authorization.k8s.io/aggregate-to-view: "true"
-    rbac.authorization.k8s.io/aggregate-to-edit: "true"
-    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+  namespace: monitoring
+  name: kube-state-metrics-resizer
 rules:
-- apiGroups: ["metrics.k8s.io"]
-  resources: ["pods", "nodes"]
-  verbs: ["get", "list", "watch"]
-
+- apiGroups: [""]
+  resources:
+  - pods
+  verbs: ["get"]
+- apiGroups: ["extensions"]
+  resources:
+  - deployments
+  resourceNames: ["kube-state-metrics"]
+  verbs: ["get", "update"]
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
+
+apiVersion: rbac.authorization.k8s.io/v1
+# kubernetes versions before 1.8.0 should use rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
 metadata:
-  name: metrics-server:system:auth-delegator
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:auth-delegator
-subjects:
-- kind: ServiceAccount
-  name: metrics-server
-  namespace: kube-system
-
+  name: kube-state-metrics
+rules:
+- apiGroups: [""]
+  resources:
+  - configmaps
+  - secrets
+  - nodes
+  - pods
+  - services
+  - resourcequotas
+  - replicationcontrollers
+  - limitranges
+  - persistentvolumeclaims
+  - persistentvolumes
+  - namespaces
+  - endpoints
+  verbs: ["list", "watch"]
+- apiGroups: ["extensions"]
+  resources:
+  - daemonsets
+  - deployments
+  - replicasets
+  verbs: ["list", "watch"]
+- apiGroups: ["apps"]
+  resources:
+  - statefulsets
+  verbs: ["list", "watch"]
+- apiGroups: ["batch"]
+  resources:
+  - cronjobs
+  - jobs
+  verbs: ["list", "watch"]
+- apiGroups: ["autoscaling"]
+  resources:
+  - horizontalpodautoscalers
+  verbs: ["list", "watch"]
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+
+apiVersion: rbac.authorization.k8s.io/v1
+# kubernetes versions before 1.8.0 should use rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
-  name: metrics-server-auth-reader
-  namespace: kube-system
+  name: kube-state-metrics
+  namespace: monitoring
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: extension-apiserver-authentication-reader
+  name: kube-state-metrics-resizer
 subjects:
 - kind: ServiceAccount
-  name: metrics-server
-  namespace: kube-system
-
+  name: kube-state-metrics
+  namespace: monitoring
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: system:metrics-server
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  - nodes
-  - nodes/stats
-  verbs:
-  - get
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
+# kubernetes versions before 1.8.0 should use rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: system:metrics-server
+  name: kube-state-metrics
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: system:metrics-server
+  name: kube-state-metrics
 subjects:
 - kind: ServiceAccount
-  name: metrics-server
-  namespace: kube-system
+  name: kube-state-metrics
+  namespace: monitoring
