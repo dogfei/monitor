@@ -19,9 +19,9 @@ spec:
         app: alert-webhook
     spec:
       containers:
+      - name: alert-webhook
         image: devilf/alert-webhook:v1
         imagePullPolicy: Always
-        name: alert-webhook
         resources:
           limits:
             cpu: 1
