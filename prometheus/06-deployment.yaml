@@ -22,6 +22,7 @@ spec:
         app: prometheus
     spec:
       serviceAccount: prometheus-sa
+      serviceAccountName: prometheus-sa
       containers:
       - name: prometheus
         image: prom/prometheus
