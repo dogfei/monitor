@@ -10,5 +10,5 @@ spec:
     protocol: TCP
     targetPort: 5000
   selector:
-    app: alert-wehbook
+    app: alert-webhook
   type: ClusterIP

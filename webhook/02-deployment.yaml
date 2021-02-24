@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: alert-wehbook
+  name: alert-webhook
   namespace: monitoring
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: alert-wehbook
+      app: alert-webhook
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -16,12 +16,12 @@ spec:
   template:
     metadata:
       labels:
-        app: alert-wehbook
+        app: alert-webhook
     spec:
       containers:
         image: devilf/alert-webhook:v1
         imagePullPolicy: Always
-        name: alert-wehbook
+        name: alert-webhook
         resources:
           limits:
             cpu: 1
@@ -35,7 +35,7 @@ spec:
           readOnly: true
           subPath: email.yaml
       dnsPolicy: ClusterFirst
-      hostname: alert-wehbook
+      hostname: alert-webhook
       restartPolicy: Always
       schedulerName: default-scheduler
       volumes:

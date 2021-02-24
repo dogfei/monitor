@@ -17,7 +17,7 @@ data:
     receivers:
     - name: 'webhook'
       webhook_configs:
-      - url: 'http://10.127.92.107:5000/webhook'
+      - url: 'http://alert-webhook:5000/webhook'
         send_resolved: true
     inhibit_rules:
     - source_match:
