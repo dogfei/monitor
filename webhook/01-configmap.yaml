@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alert-config
+  namespace: monitoring
+data:
+  email.yaml: |
+    send:
+      smtp_host: smtp.163.com
+      send_user: waxxs@163.com
+      send_addr: warnx@163.com
+      send_pass: BRMUxxZPUZEK
+    email:
+      - name: liusong
+        receive_addr:
+          - lixxf@glxx.com
+          - mxxw@gxxn.com
+      - name: ops
+        receive_addr:
+          - chxx-o@glxxon.com
+          - 17xx1438@163.com

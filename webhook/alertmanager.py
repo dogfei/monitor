@@ -104,7 +104,7 @@ def webhook():
             prometheus_monitor_info=prometheus_data
         )
         # 获取收件人邮件列表
-        email_list = get_email_conf('email.yaml', email_name=team_name, action=0)
+        email_list = get_email_conf('/usr/app/conf/email.yaml', email_name=team_name, action=0)
         sendEmail(
             'Prometheus Monitor',
             html_template_content,

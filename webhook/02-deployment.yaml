@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alert-wehbook
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alert-wehbook
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: alert-wehbook
+    spec:
+      containers:
+        image: devilf/alert-webhook:v1
+        imagePullPolicy: Always
+        name: alert-wehbook
+        resources:
+          limits:
+            cpu: 1
+            memory: 1000M
+          requests:
+            cpu: 1
+            memory: 1000M
+        volumeMounts:
+        - mountPath: /usr/app/conf/email.yaml
+          name: alert
+          readOnly: true
+          subPath: email.yaml
+      dnsPolicy: ClusterFirst
+      hostname: alert-wehbook
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: alert-config
+        name: alert
