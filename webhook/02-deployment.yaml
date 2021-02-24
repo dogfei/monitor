@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: alert-webhook
-        image: devilf/alert-webhook:v1
+        image: registry.cn-beijing.aliyuncs.com/cloudt-pub/alert-webhook:v1
         imagePullPolicy: Always
         resources:
           limits:
