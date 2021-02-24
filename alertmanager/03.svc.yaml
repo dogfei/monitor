@@ -3,10 +3,6 @@ kind: Service
 metadata:
   name: alertmanager
   namespace: monitoring
-  labels:
-    kubernetes.io/cluster-service: "true"
-    addonmanager.kubernetes.io/mode: Reconcile
-    kubernetes.io/name: "Alertmanager"
 spec:
   ports:
     - name: http
