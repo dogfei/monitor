@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus-web
+  namespace: monitoring
+spec:
+  rules:
+  - host: prometheus-web-monitoring.yz.prod
+    http:
+      paths:
+      - backend:
+          serviceName: prometheus
+          servicePort: 9090
+        path: /
