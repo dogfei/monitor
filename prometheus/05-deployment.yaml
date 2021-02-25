@@ -32,6 +32,7 @@ spec:
           protocol: TCP
           name: http
         args:
+        - --web.external-url=prometheus #设置子路径
         - --storage.tsdb.retention=15d
         - --config.file=/etc/prometheus/prometheus.yaml
         - --storage.tsdb.path=/data/prometheus-data #指定存储路径
