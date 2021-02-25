@@ -384,8 +384,6 @@ spec:
             requests:
               cpu: 100m
               memory: 90Mi
-      nodeSelector:
-        kubernetes.io/os: linux
       tolerations:
       - key: "nodeType"
         operator: "Equal"
