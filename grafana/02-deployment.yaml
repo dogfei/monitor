@@ -41,7 +41,7 @@ spec:
         - name: GF_SECURITY_ADMIN_PASSWORD
           value: "123456"
         - name: GF_SERVER_ROOT_URL
-          value: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
+          value: "%(protocol)s://%(domain)s:%(http_port)s/gf"
         - name: GF_AUTH_PROXY_ENABLED
           value: "true"
         - name: GF_DASHBOARD_JSON_ENABLED
