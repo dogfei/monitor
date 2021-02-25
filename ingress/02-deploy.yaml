@@ -391,7 +391,6 @@ spec:
         operator: "Equal"
         value: "external"
         effect: "NoSchedule"
-        tolerationSeconds: 600
       hostNetwork: true
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
